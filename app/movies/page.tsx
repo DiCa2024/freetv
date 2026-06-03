@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { supabase } from "@/lib/supabase";
 import MoviesClient from "./MoviesClient";
 
@@ -63,7 +64,9 @@ export default async function MoviesPage() {
       </section>
 
             <section className="mx-auto max-w-7xl px-6 py-12">
-        <MoviesClient movies={movies} />
+        <Suspense fallback={<div className="text-slate-500">Loading movies...</div>}>
+          <MoviesClient movies={movies} />
+        </Suspense>
       </section>
     </main>
   );
