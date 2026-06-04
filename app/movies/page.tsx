@@ -34,6 +34,11 @@ export default async function MoviesPage() {
 
   const movies = (data || []) as Movie[];
 
+  const { data: articleData } = await supabase
+  .from("blog_posts")
+  .select("id, title_ko, title_en, slug, related_movie_slug")
+  .eq("is_visible", true);
+
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <section className="bg-gradient-to-b from-sky-100 to-white px-6 py-24 text-center">
@@ -65,7 +70,7 @@ export default async function MoviesPage() {
 
             <section className="mx-auto max-w-7xl px-6 py-12">
         <Suspense fallback={<div className="text-slate-500">Loading movies...</div>}>
-          <MoviesClient movies={movies} />
+          <MoviesClient movies={movies} articles={articleData || []} />
         </Suspense>
       </section>
     </main>

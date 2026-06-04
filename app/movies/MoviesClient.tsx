@@ -18,9 +18,23 @@ type Movie = {
   is_visible: boolean;
 };
 
+type Article = {
+  id: number;
+  title_ko: string | null;
+  title_en: string | null;
+  slug: string;
+  related_movie_slug: string | null;
+};
+
 const genres = ["All", "Horror", "Comedy", "Drama", "Sci-Fi", "Animation", "Silent Films"];
 
-export default function MoviesClient({ movies }: { movies: Movie[] }) {
+export default function MoviesClient({
+  movies,
+  articles,
+}: {
+  movies: Movie[];
+  articles: Article[];
+}) {
   const searchParams = useSearchParams();
   const movieSlug = searchParams.get("movie");
   const query = searchParams.get("q") || "";
@@ -65,6 +79,12 @@ export default function MoviesClient({ movies }: { movies: Movie[] }) {
 
   return matchesGenre && matchesSearch;
 });
+
+const relatedArticles = selectedMovie
+  ? articles.filter(
+      (article) => article.related_movie_slug === selectedMovie.slug
+    )
+  : [];
 
   return (
     <>
@@ -190,6 +210,25 @@ export default function MoviesClient({ movies }: { movies: Movie[] }) {
                     Watch Movie
                   </a>
                 )}
+                {relatedArticles.length > 0 && (
+                    <div className="mt-8">
+                    <h3 className="mb-4 text-lg font-bold text-slate-950">
+                      Related Articles
+                    </h3>
+
+                   <div className="space-y-3">
+                     {relatedArticles.map((article) => (
+                      <a
+                     key={article.id}
+                     href={`/blog/${article.slug}`}
+                        className="block rounded-2xl bg-sky-50 p-4 text-sm font-semibold text-slate-700 ring-1 ring-sky-100 transition hover:bg-sky-100 hover:text-sky-600"
+                       >
+          {article.title_ko || article.title_en}
+        </a>
+      ))}
+    </div>
+  </div>
+)}
               </div>
             </div>
           </div>
