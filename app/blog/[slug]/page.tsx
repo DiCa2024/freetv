@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type BlogPost = {
   id: number;
@@ -112,13 +114,39 @@ export default async function BlogDetailPage({
               </div>
             )}
 
-            <div className="prose prose-slate mt-12 max-w-none">
-              {(blogPost.content_ko || blogPost.content_en || "")
-                .split("\n")
-                .map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
-            </div>
+            <div className="mt-12 text-slate-700">
+  <ReactMarkdown
+    remarkPlugins={[remarkGfm]}
+    components={{
+      h2: ({ children }) => (
+        <h2 className="mb-5 mt-12 text-3xl font-bold text-slate-950">
+          {children}
+        </h2>
+      ),
+      h3: ({ children }) => (
+        <h3 className="mb-4 mt-10 text-2xl font-bold text-slate-950">
+          {children}
+        </h3>
+      ),
+      p: ({ children }) => (
+        <p className="mb-6 text-lg leading-8 text-slate-700">
+          {children}
+        </p>
+      ),
+      ul: ({ children }) => (
+        <ul className="mb-8 ml-6 list-disc space-y-2 text-lg leading-8 text-slate-700">
+          {children}
+        </ul>
+      ),
+      li: ({ children }) => <li>{children}</li>,
+      strong: ({ children }) => (
+        <strong className="font-bold text-slate-950">{children}</strong>
+      ),
+    }}
+  >
+    {blogPost.content_ko || blogPost.content_en || ""}
+  </ReactMarkdown>
+</div>
           </div>
 
           <aside className="space-y-6">
