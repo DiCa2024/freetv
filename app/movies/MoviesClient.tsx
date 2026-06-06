@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 type Movie = {
   id: number;
   title_ko: string;
-  title_en: string; 
+  title_en: string | null;
   slug: string;
   year: number | null;
   genre: string | null;
@@ -135,7 +135,7 @@ const relatedArticles = selectedMovie
                   {movie.thumbnail_url || movie.poster_url ? (
                   <img
                     src={(movie.thumbnail_url || movie.poster_url || "").trim()}
-                    alt={movie.title_ko || movie.title_en}
+                    alt={movie.title_ko || movie.title_en || "Movie"}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                 ) : null}
@@ -168,7 +168,7 @@ const relatedArticles = selectedMovie
                 {selectedMovie.poster_url || selectedMovie.thumbnail_url ? (
                   <img
                    src={(selectedMovie.poster_url || selectedMovie.thumbnail_url || "").trim()}
-                    alt={selectedMovie.title_en}
+                    alt={selectedMovie.title_ko || selectedMovie.title_en || "Movie"}
                    className="max-h-[70vh] w-full object-contain"
                   />
                 ) : null}

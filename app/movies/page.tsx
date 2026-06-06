@@ -6,17 +6,22 @@ export const dynamic = "force-dynamic";
 
 type Movie = {
   id: number;
-  title_en: string;
+  title_ko: string;
+  title_en: string | null;
   slug: string;
   year: number | null;
   genre: string | null;
+  country: string | null;
+  language: string | null;
   director: string | null;
   actors: string | null;
+  description_ko: string | null;
   description_en: string | null;
   poster_url: string | null;
   thumbnail_url: string | null;
   watch_url: string | null;
   is_visible: boolean;
+  created_at: string;
 };
 
 const genres = ["All", "Horror", "Comedy", "Drama", "Sci-Fi", "Animation", "Silent Films"];
@@ -25,8 +30,8 @@ export default async function MoviesPage() {
   const { data, error } = await supabase
     .from("movies")
      .select(
-    "id, title_ko, title_en, slug, year, genre, director, actors, description_ko, description_en, poster_url, thumbnail_url, watch_url, is_visible, created_at"
-     )
+      "id, title_ko, title_en, slug, year, genre, country, language, director, actors, description_ko, description_en, poster_url, thumbnail_url, watch_url, is_visible, created_at"
+    )
     .eq("is_visible", true)
     .order("created_at", { ascending: false });
 
