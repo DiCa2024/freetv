@@ -5,12 +5,16 @@ import { useSearchParams } from "next/navigation";
 
 type Movie = {
   id: number;
-  title_en: string;
+  title_ko: string;
+  title_en: string; 
   slug: string;
   year: number | null;
   genre: string | null;
+  country: string | null;
   director: string | null;
   actors: string | null;
+  language: string | null;
+  description_ko: string | null;
   description_en: string | null;
   poster_url: string | null;
   thumbnail_url: string | null;
@@ -70,12 +74,13 @@ export default function MoviesClient({
   const keyword = searchKeyword.toLowerCase().trim();
 
   const matchesSearch =
-    keyword === "" ||
-    movie.title_en?.toLowerCase().includes(keyword) ||
-    movie.genre?.toLowerCase().includes(keyword) ||
-    movie.director?.toLowerCase().includes(keyword) ||
-    movie.actors?.toLowerCase().includes(keyword) ||
-    movie.description_en?.toLowerCase().includes(keyword);
+  keyword === "" ||
+  movie.title_ko?.toLowerCase().includes(keyword) ||
+  movie.title_en?.toLowerCase().includes(keyword) ||
+  movie.genre?.toLowerCase().includes(keyword) ||
+  movie.country?.toLowerCase().includes(keyword) ||
+  movie.description_ko?.toLowerCase().includes(keyword) ||
+  movie.description_en?.toLowerCase().includes(keyword);
 
   return matchesGenre && matchesSearch;
 });
@@ -130,14 +135,14 @@ const relatedArticles = selectedMovie
                   {movie.thumbnail_url || movie.poster_url ? (
                   <img
                     src={(movie.thumbnail_url || movie.poster_url || "").trim()}
-                    alt={movie.title_en}
+                    alt={movie.title_ko || movie.title_en}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                 ) : null}
                 </div>
 
                 <div className="p-4">
-                  <h3 className="font-semibold">{movie.title_en}</h3>
+                  <h3 className="font-semibold">{movie.title_ko || movie.title_en}</h3>
                   <p className="mt-1 text-sm text-slate-500">
                     {movie.year || "Classic"} · {movie.genre || "Movie"}
                   </p>
@@ -169,66 +174,73 @@ const relatedArticles = selectedMovie
                 ) : null}
               </div>
 
-              <div className="pr-0 md:pr-10">
-                <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-sky-500">
-                  {selectedMovie.genre || "Classic Movie"}
-                </p>
+             <div className="pr-0 md:pr-10">
+  <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-sky-500">
+    {selectedMovie.genre || "Classic Movie"}
+  </p>
 
-                <h2 className="text-3xl font-bold text-slate-950 md:text-5xl">
-                  {selectedMovie.title_en}
-                </h2>
+  <h2 className="text-3xl font-bold text-slate-950 md:text-5xl">
+    {selectedMovie.title_ko || selectedMovie.title_en}
+  </h2>
 
-                <p className="mt-3 text-sm text-slate-500">
-                  {selectedMovie.year || "Classic"} ·{" "}
-                  {selectedMovie.director || "Unknown Director"}
-                </p>
+  <p className="mt-3 text-sm text-slate-500">
+    {selectedMovie.year || "Classic"}
+    {selectedMovie.country ? ` · ${selectedMovie.country}` : ""}
+  </p>
 
-                <div className="mt-6 space-y-3 text-sm leading-7 text-slate-700">
-                  <p>
-                    <span className="font-semibold text-slate-950">Director: </span>
-                    {selectedMovie.director || "Unknown"}
-                  </p>
+  <div className="mt-8">
+    <h3 className="mb-3 text-lg font-bold text-slate-950">
+      Summary
+    </h3>
 
-                  <p>
-                    <span className="font-semibold text-slate-950">Actors: </span>
-                    {selectedMovie.actors || "Unknown"}
-                  </p>
-
-                  <p>
-                    <span className="font-semibold text-slate-950">Synopsis: </span>
-                    {selectedMovie.description_en || "No synopsis available."}
-                  </p>
-                </div>
-
-                {selectedMovie.watch_url && (
-                  <a
-                    href={selectedMovie.watch_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-8 inline-flex rounded-full bg-sky-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600"
-                  >
-                    Watch Movie
-                  </a>
-                )}
-                {relatedArticles.length > 0 && (
-                    <div className="mt-8">
-                    <h3 className="mb-4 text-lg font-bold text-slate-950">
-                      Related Articles
-                    </h3>
-
-                   <div className="space-y-3">
-                     {relatedArticles.map((article) => (
-                      <a
-                     key={article.id}
-                     href={`/blog/${article.slug}`}
-                        className="block rounded-2xl bg-sky-50 p-4 text-sm font-semibold text-slate-700 ring-1 ring-sky-100 transition hover:bg-sky-100 hover:text-sky-600"
-                       >
-          {article.title_ko || article.title_en}
-        </a>
-      ))}
-    </div>
+    <p className="text-base leading-8 text-slate-700">
+      {selectedMovie.description_ko ||
+        selectedMovie.description_en ||
+        "No summary available."}
+    </p>
   </div>
-)}
+
+  {relatedArticles.length > 0 && (
+    <div className="mt-8">
+      <h3 className="mb-4 text-lg font-bold text-slate-950">
+        Related Articles
+      </h3>
+
+      <div className="space-y-3">
+        {relatedArticles.map((article) => (
+          <a
+            key={article.id}
+            href={`/blog/${article.slug}`}
+            className="block rounded-2xl bg-sky-50 p-4 text-sm font-semibold text-slate-700 ring-1 ring-sky-100 transition hover:bg-sky-100 hover:text-sky-600"
+          >
+            {article.title_ko || article.title_en}
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <div className="mt-8 flex flex-wrap gap-3">
+    {selectedMovie.watch_url && (
+      <a
+        href={selectedMovie.watch_url}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex rounded-full bg-sky-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600"
+      >
+        Watch Movie
+      </a>
+    )}
+
+    {relatedArticles.length > 0 && (
+      <a
+        href={`/blog/${relatedArticles[0].slug}`}
+        className="inline-flex rounded-full bg-sky-50 px-6 py-3 text-sm font-bold text-sky-700 ring-1 ring-sky-100 transition hover:bg-sky-100"
+      >
+        Read Article
+      </a>
+    )}
+  </div>
               </div>
             </div>
           </div>
