@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { supabase } from "@/lib/supabase";
 import MoviesClient from "./MoviesClient";
 
+export const dynamic = "force-dynamic";
+
 type Movie = {
   id: number;
   title_en: string;
