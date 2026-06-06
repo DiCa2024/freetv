@@ -86,9 +86,9 @@ export default function MoviesClient({
 });
 
 const relatedArticles = selectedMovie
-  ? articles.filter(
-      (article) => article.related_movie_slug === selectedMovie.slug
-    )
+  ? articles
+      .filter((article) => article.related_movie_slug === selectedMovie.slug)
+      .slice(0, 3)
   : [];
 
   return (
@@ -229,15 +229,6 @@ const relatedArticles = selectedMovie
         className="inline-flex rounded-full bg-sky-500 px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600"
       >
         Watch Movie
-      </a>
-    )}
-
-    {relatedArticles.length > 0 && (
-      <a
-        href={`/blog/${relatedArticles[0].slug}`}
-        className="inline-flex rounded-full bg-sky-50 px-6 py-3 text-sm font-bold text-sky-700 ring-1 ring-sky-100 transition hover:bg-sky-100"
-      >
-        Read Article
       </a>
     )}
   </div>
