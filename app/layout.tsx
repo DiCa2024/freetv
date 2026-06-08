@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -16,11 +17,16 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-       <Navbar />
+        <Script
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900744229489479"
+          crossOrigin="anonymous"
+        />
 
+        <Navbar />
         {children}
-
-       <Footer />
+        <Footer />
       </body>
     </html>
   );
